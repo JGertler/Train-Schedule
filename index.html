@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Train Schedule</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.min.js"
+      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+      crossorigin="anonymous">
+    </script>
+
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="moment.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.1.1/firebase.js"></script>
+    <script src="app.js" charset="utf-8"></script>
+  </head>
+
+  <body background="tracks.jpg" style="background-image: repeat">
+    <div class="container">
+      <div class="row">
+        <div class="jumbotron-fluid text-center" style="background-color: black; border-radius: 150px">
+          <img src="Dudewheresmytrain.png">
+        </div>
+      </div>
+      <div class="row panel well" style="background-color: #ffdb58">
+        <div class="col-md-12">
+          <table id="trainTable" class="table table-bordered">
+            <tbody class="tbody" style="background-color: black" >
+              <tr id="headers" style="color: white">
+                <th class="text-center trainNameClass">Train Name</th>
+                <th class="text-center destinationClass">Destination</th>
+                <th class="text-center frequencyClass">Frequency</th>
+                <th class="text-center nextArrivalClass">Next Arrival</th>
+                <th class="text-center minutesAwayClass">Minutes Away</th>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel well row" style="background-color: #ffdb58">
+        <div class="col-md-12 well" style="background-color: black">
+          <form id="trainFormEntry" style="color: white">
+            <div class="form-group has-success">
+              <label for="">Train Name</label>
+              <input type="input" class="form-control form-control-success" id="trainName" placeholder="Train Name">
+            </div>
+            <div class="form-group has-success">
+              <label for="">Destination</label>
+              <input type="input" class="form-control form-control-success" id="destination" placeholder="Destination">
+            </div>
+            <div class="form-group has-success">
+              <label for="">First Train Time</label>
+              <input type="input" class="form-control form-control-success"" id="firstTrainTime" placeholder="HH:mm (military time)">
+            </div>
+            <div class="form-group has-success">
+              <label for="">Frequency</label>
+              <input type="input" class="form-control form-control-success"" id="frequency" placeholder="00 Minutes Between Train Arrivals">
+            </div>
+            <button id= "submitBtn" type="submit" class="btn btn-default btn-danger">Submit</button>
+          </form>
+        </div>
+      </div>
+      <!-- end container -->
+    </div> 
+  </body>
+</html>
