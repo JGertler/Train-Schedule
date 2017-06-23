@@ -15,7 +15,7 @@ firebase.initializeApp(config);
 
 
 // plaster data from firebase onto html 
-  trainDataRef.ref().on("value", function (snapshot) {
+  trainDataRef.ref().on("child_added", function (snapshot) {
 
  // <--- set variables based on user input ---> \\
   var trainName = snapshot.val().train;
