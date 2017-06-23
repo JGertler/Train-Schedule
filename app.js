@@ -14,38 +14,21 @@ firebase.initializeApp(config);
   var trainDataRef = firebase.database();
 
 
-// When submit button is clicked, add pull
-$('#submitBtn').on('click', function(event) {
+// plaster data from firebase onto html 
+  trainDataRef.ref().on("value", function (snapshot) {
 
-    event.preventDefault();
-
-
-
-// trainDataRef.ref().push({
-//     name1: 'lol'
-//     // train: trainName,
-//     // dest: destination,
-//     // freq: frequency,
-//     // next: tArrival,
-//     // minAway: tMinutes
-
-// });
-
-  // <--- set variables based on user input ---> \\
-  var trainName = $('#trainName').val().trim();
-  var destination = $('#destination').val().trim();
-  var frequency = $('#frequency').val().trim() + " minutes between trains";
-  // translate user input of First Train Time to be moment.js friendly
-  var tFirstTrain = moment($("#firstTrainTime").val().trim(), "HH:mm").subtract(10, "years").format("X");
-
-  // for calculation purposes, make "frequency" an integer
-  var frequencyValue = parseInt($('#frequency').val().trim());
+ // <--- set variables based on user input ---> \\
+  var trainName = snapshot.val().train;
+  var destination = snapshot.val().dest;
+      // for calculation purposes, make "frequency" an integer
+  var frequency = parseInt(snapshot.val().freq);
+  var tFirstTrain = snapshot.val().firstTrain;
 
 
   // calculate Next Arrival: divide difference of times by frequency.
   var differenceTimes = moment().diff(moment.unix(tFirstTrain), "minutes");
-  var tRemainder = moment().diff(moment.unix(tFirstTrain), "minutes") % frequencyValue;
-  var tMinutes = frequencyValue - tRemainder;
+  var tRemainder = moment().diff(moment.unix(tFirstTrain), "minutes") % frequency;
+  var tMinutes = frequency - tRemainder;
   // arrival time = tMinutes + currrent time
   var tArrival = moment().add(tMinutes, "m").format("hh:mm A");
 
@@ -59,7 +42,7 @@ $('#submitBtn').on('click', function(event) {
     
     trainNameColumn.html(trainName);
     destinationColumn.html(destination);
-    frequencyColumn.html(frequency);
+    frequencyColumn.html(frequency + " minutes between trains");
     tArrivalColumn.html(tArrival);
     tMinutesColumn.html(tMinutes);    
 
@@ -70,16 +53,31 @@ $('#submitBtn').on('click', function(event) {
     tableRow.append(tMinutesColumn);
     tableRow.css("color", "white");
 
-  // add the row to the table (in style)
+  // add the row to the table 
     $('.tbody').append(tableRow);
+  });
+
+
+// When submit button is clicked, add pull
+$('#submitBtn').on('click', function(event) {
+
+    event.preventDefault();
+
 
     // Sets the values inside object to later be pushed to database
+    // <--- set variables based on user input ---> \\
+  var trainName = $('#trainName').val().trim();
+  var destination = $('#destination').val().trim();
+  var frequency = $('#frequency').val().trim();
+  // translate user input of First Train Time to be moment.js friendly
+  var tFirstTrain = moment($("#firstTrainTime").val().trim(), "HH:mm").subtract(10, "years").format("X");
+
+
 var trainData = {
     train: trainName,
     dest: destination,
     freq: frequency,
-    next: tArrival,
-    minAway: tMinutes
+    firstTrain: tFirstTrain 
     };
 
     // check that the object looks accurate
