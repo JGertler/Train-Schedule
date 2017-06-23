@@ -10,87 +10,84 @@ $(document).ready(function() {
   };
   
 firebase.initializeApp(config);
-  var currentTime;
-  var timeTilArrival;
-  var database = firebase.database();
-  var trainListRef = database.ref('trains');
-  var trainNumber=0;
 
-// Adds row to train table
-var addTrain = function(trainName, destination, frequency, nextArrival, minutesAway) {
+  var trainDataRef = firebase.database();
 
-  // Creates a reference in firebase to a new train, and pushes it to the database
-  var trainRef = trainListRef.push();
-
-  // Sets the values inside the empty Trains Reference
-  newTrainsRef.set({
-    trainName: trainName,
-    destination: destination,
-    frequency: frequency,
-    nextArrival: nextArrival,
-    minutesAway: minutesAway
-    });
-    return newTrainsRef;
-  };
-
-
-
-// Calculates the total billed
-var calculateTotalBilled = function(rate, monthsWorked) {
-  return rate * monthsWorked;
-};
 
 // When submit button is clicked, add pull
 $('#submitBtn').on('click', function(event) {
-  event.preventDefault();
-  var tableRow = $('<tr>');
-  var tableColumn = $('<td>')
-  var trainNameColumn= $('<td>');
-  var destinationColumn= $('<td>');
-  var frequencyColumn= $('<td>');
-  var tArrivalColumn= $('<td>');
-  var tMinutesColumn= $('<td>');
 
+    event.preventDefault();
+
+
+
+// trainDataRef.ref().push({
+//     name1: 'lol'
+//     // train: trainName,
+//     // dest: destination,
+//     // freq: frequency,
+//     // next: tArrival,
+//     // minAway: tMinutes
+
+// });
+
+  // <--- set variables based on user input ---> \\
   var trainName = $('#trainName').val().trim();
   var destination = $('#destination').val().trim();
   var frequency = $('#frequency').val().trim() + " minutes between trains";
-  var frequencyValue = parseInt($('#frequency').val().trim());
-
   // translate user input of First Train Time to be moment.js friendly
   var tFirstTrain = moment($("#firstTrainTime").val().trim(), "HH:mm").subtract(10, "years").format("X");
+
+  // for calculation purposes, make "frequency" an integer
+  var frequencyValue = parseInt($('#frequency').val().trim());
+
+
   // calculate Next Arrival: divide difference of times by frequency.
   var differenceTimes = moment().diff(moment.unix(tFirstTrain), "minutes");
   var tRemainder = moment().diff(moment.unix(tFirstTrain), "minutes") % frequencyValue;
   var tMinutes = frequencyValue - tRemainder;
   // arrival time = tMinutes + currrent time
   var tArrival = moment().add(tMinutes, "m").format("hh:mm A");
-  
 
-  
-  trainNameColumn.html(trainName);
-  destinationColumn.html(destination);
-  frequencyColumn.html(frequency);
-  tArrivalColumn.html(tArrival);
-  tMinutesColumn.html(tMinutes);
+    var tableRow = $('<tr>');
+    var tableColumn = $('<td>')
+    var trainNameColumn= $('<td>');
+    var destinationColumn= $('<td>');
+    var frequencyColumn= $('<td>');
+    var tArrivalColumn= $('<td>');
+    var tMinutesColumn= $('<td>');
+    
+    trainNameColumn.html(trainName);
+    destinationColumn.html(destination);
+    frequencyColumn.html(frequency);
+    tArrivalColumn.html(tArrival);
+    tMinutesColumn.html(tMinutes);    
 
-  tableRow.append(trainNameColumn);
-  tableRow.append(destinationColumn);
-  tableRow.append(frequencyColumn);
-  tableRow.append(tArrivalColumn);
-  tableRow.append(tMinutesColumn);
+    tableRow.append(trainNameColumn);
+    tableRow.append(destinationColumn);
+    tableRow.append(frequencyColumn);
+    tableRow.append(tArrivalColumn);
+    tableRow.append(tMinutesColumn);
+    tableRow.css("color", "white");
 
-  $('.tbody').append(tableRow)
-tableRow.css("color", "white");
+  // add the row to the table (in style)
+    $('.tbody').append(tableRow);
 
-});
+    // Sets the values inside object to later be pushed to database
+var trainData = {
+    train: trainName,
+    dest: destination,
+    freq: frequency,
+    next: tArrival,
+    minAway: tMinutes
+    };
 
+    // check that the object looks accurate
+console.log ('traindata:    ', trainData);
 
+trainDataRef.ref().push(trainData);
 
-
-
-
-
-
+  });
 
 
 // end document ready function
